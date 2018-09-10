@@ -20,21 +20,23 @@ const Chaincode = class {
 
   async initLog(stub, args) {
     const obj = JSON.stringify({
-      _id: '_' + Math.random().toString(36).substr(2, 9),
-      process: args[1],
-      dateTime: args[2],
-      hostname: args[3],
-      javaLocation: args[4],
-      javaVersion: args[5],
-      OS: args[6],
-      OSArchitecture: args[7],
-      OSVersion: args[8]
-    })
+      process: args[0],
+      dateTime: args[1],
+      hostname: args[2],
+      javaLocation: args[3],
+      javaVersion: args[4],
+      OS: args[5],
+      OSArchitecture: args[6],
+      OSVersion: args[7]
+    });
+
+    const log = '_' + Math.random().toString(36).substr(2, 9);
 
     await stub.putState(log, obj);
 
-    const company = await stub.getState(company);
-
+    // const company = await stub.getState(company);
+    // company = company + " " + _id + ",";
+    // await stub.putState(company, company);
 
     return shim.success(Buffer.from('Log recorded successfully'));
   }
