@@ -1,11 +1,11 @@
 const shim = require('fabric-shim');
-const util = require('util');
+// const util = require('util');
 
 const Chaincode = class {
   async Init(stub) {
-    const ret = stub.getFunctionAndParameters();
-    const company = ret.params[0];
-    const logs = "0";
+    let ret = stub.getFunctionAndParameters();
+    let company = ret.params[0];
+    let logs = "0";
 
     await stub.putState(company, logs)
  
@@ -13,66 +13,57 @@ const Chaincode = class {
   }
 
   async Invoke(stub) {
-    console.info('Transaction ID: ' + stub.getTxId());
-    console.info(util.format('Args: %j', stub.getArgs()));
+    let ret = stub.getFunctionAndParameters();
 
-    const { fcn, args } = stub.getFunctionAndParameters();
-    console.info('Calling function: ' + fcn)
-
-    switch (fcn) {
-      case 'initLog':
-        return await this.initLog(stub, args);
-      case 'query':
-        return await this.query(stub, args);
-      case 'queryLogs':
-        return await this.queryLogs(stub, args);
-    }
+    let fcn = this[ret.fcn];
+    return fcn(stub, ret.params);
   }
 
   async initLog(stub, args) {
+    let obj = ({
+      process: args[1],
+      dateTime: args[2],
+      hostname: args[3],
+      javaLocation: args[4],
+      javaVersion: args[5],
+      OS: args[6],
+      OSArchitecture: args[7],
+      OSVersion: args[8]
+    });
 
-    params = args[1].split(',').join('');
+    let logCount = await stub.getState(args[0]);
+    logCount = parseInt(logCount);
+    logCount = logCount + 1;
+    logCount = logCount.toString();
 
-    const obj = ({
-      process: params[0],
-      dateTime: params[1],
-      hostname: params[2],
-      javaLocation: params[4],
-      javaVersion: params[5],
-      OS: params[9],
-      OSArchitecture: params[10],
-      OSVersion: params[11]
-    })
-
-    const company = args[0];
-    const logCount = await stub.getState(company);
-    logCount = parseInt(logCount++);
-
-    var obj = new Uint16Array(obj)
-
-    await stub.putState(logCount.toString(), obj);
-    await stub.putState(company, logCount.toString());
+    await stub.putState(logCount, JSON.stringify(obj));
+    await stub.putState(args[0], logCount);
 
     return shim.success(Buffer.from('Log recorded successfully'));
   }
 
   async query(stub, args) {
-    const company = args[0];
-    const data = await stub.getState(company);
+    let company = args[0];
+    let data = await stub.getState(company)
 
     return shim.success(Buffer.from(data));
   }
 
-  async queryLogs(stub, args) {
-    const company = args[0];
-    const logCount = stub.getState(company);
+  async queryLog(stub, args) {
+    let log = await stub.getState(args[0]);
+    return shim.success(Buffer.from(log));
+  }
 
-    const startKey = "0";
-    const endKey = logCount;
+  async queryLogs(stub, args) {
+    let company = args[0];
+    let logCount = stub.getState(company);
+    logCount = parseInt(logCount)++;
+
+    let startKey = "1";
+    let endKey = logCount;
 
     return stub.GetStateByRange(startKey, endKey);
   }
-
 }
 
 shim.start(new Chaincode);
