@@ -1,23 +1,20 @@
-/* Testing packages that help manage chaincode formatting
 
-// import { Chaincode, Helpers, NotFoundError, StubHelper } from '@theledger/fabric-chaincode-utils';
-// const stubHelper = new StubHelper;
-// const util = require('util');
-
-*/
-
+// shim package used to help serialize/deserialize data stored in blockchain
 const shim = require('fabric-shim');
 
 const Chaincode = class {
+
   // Initialize chaincode on the peer, requires an argument specyfing the user's company name
-  // Then the company get stored as a key-value pair with a value of "0" represinting the amount of logs recorded
+  // Then the company gets stored as a key-value pair with a value of "0" represinting the amount of logs recorded
+  
   async Init(stub) {
+    // .getFunctionAndParameters() returns the function and parameters as ret.fcn and ret.params
     let ret = stub.getFunctionAndParameters();
     let company = ret.params[0];
     let logs = "0";
 
     // Stores company name with a value of "0"
-    await stub.putState(company, logs)
+    await stub.putState(company, Buffer.from(logs));
  
     return shim.success(Buffer.from('Initialized Successfully'));
   }
@@ -25,7 +22,6 @@ const Chaincode = class {
   // Method used to get invoke all other functions
   async Invoke(stub) {
 
-    // .getFunctionAndParameters() returns the function and parameters as ret.fcn and ret.params
     let ret = stub.getFunctionAndParameters();
 
     let fcn = this[ret.fcn];
@@ -47,48 +43,59 @@ const Chaincode = class {
       OSVersion: args[8]
     });
 
-    // Specify company name to be able to get its state
-    const company = args[0].toString();
+    // Specify company name to be able to get its state (log count)
+    const company = args[0];
 
     // Increases the companies log count by one
     let logCount = await stub.getState(company);
     logCount = parseInt(logCount);
     logCount = logCount + 1;
     logCount = logCount.toString();
+    
+    // Making object with log data into a JSON stringified object
+    obj = JSON.stringify(obj)
 
     // Stores object with it's companies log count as its key
-    await stub.putState(logCount, JSON.stringify(obj));
-
+    await stub.putState(logCount, Buffer.from(obj))
+        
     // Updates the companies total log count
-    await stub.putState(company, logCount);
-
-    return shim.success(Buffer.from('Log recorded successfully', obj));
+    await stub.putState(company, Buffer.from(logCount))
+  
+    return shim.success(Buffer.from('Log recorded successfully', "", obj));
   }
 
-  // Queries using the company name as a key and returns 
+  // Queries using the company name as a key and returns it's log count
   async query(stub, args) {
-    const company = args[0].toString();
-    let data = await stub.getStateAsString(company);
+    const company = args[0];
+    let data = await stub.getState(company);
 
     return shim.success(Buffer.from('Data: ' + data));
   }
 
-  // Queries a log's data using its key
+  // Queries a single log's data using it's key
   async queryLog(stub, args) {
     let log = await stub.getState(args[0]);
-    return shim.success(Buffer.from(log));
+    return shim.success(Buffer.from("Log: " + log));
   }
 
-  // Queries all of a companies logs
+  // Queries all logs associated with a company name
+  // Requires company name to get their log count and then loops from log #1 up until the last log
+  // Returns an array with each of these logs as a object inside the array
   async queryAllLogs(stub, args) {
     let company = args[0];
-    let logCount = stub.getState(company);
-    logCount = parseInt(logCount)++;
-
-    let startKey = "1";
-    let endKey = logCount;
-
-    return stub.GetStateByRange(startKey, endKey);
+    let logCount = await stub.getState(company);
+    logCount = parseInt(logCount);
+    logCount = logCount + 1;
+    
+    // Defines array were all logs are pushed into
+    let logArr = [];
+    
+    for (let i = 1; i < logCount; i++) {
+      i = i.toString();
+      let data = await stub.getState(i);
+      logArr.push(data);
+    }
+    return shim.success(Buffer.from("Logs: " + logArr));
   }
 }
 
