@@ -69,13 +69,13 @@ const Chaincode = class {
     const company = args[0];
     let data = await stub.getState(company);
 
-    return shim.success(Buffer.from('Data: ' + data));
+    return shim.success(Buffer.from('Log count: ' + data));
   }
 
   // Queries a single log's data using it's key
   async queryLog(stub, args) {
     let log = await stub.getState(args[0]);
-    return shim.success(Buffer.from("Log: " + log));
+    return shim.success(Buffer.from("Log #" + args[0] + ": " + log));
   }
 
   // Queries all logs associated with a company name
@@ -95,7 +95,7 @@ const Chaincode = class {
       let data = await stub.getState(i);
       logArr.push(data);
     }
-    return shim.success(Buffer.from("Logs: " + logArr));
+    return shim.success(Buffer.from("All logs from " + args[0] + ": " + logArr));
   }
 }
 
