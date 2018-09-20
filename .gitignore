@@ -1,1 +1,9 @@
+# Ignores node_modules directory
 /node_modules
+/node/node_modules
+
+# Ignores the tests folder containing some chaincode tests
+./tests
+
+# Ignores .vscode folder which ignores git
+./.vscode
