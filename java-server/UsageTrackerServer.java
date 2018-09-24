@@ -1,3 +1,5 @@
+import java.lang.*;
+import java.util.*;
 import java.net.InetAddress;
 import java.net.DatagramSocket;
 import java.net.DatagramPacket;
@@ -185,11 +187,20 @@ public class UsageTrackerServer {
                     if (verbose) {
                         System.out.println("Received message size: " +
                             dataReceived.length());
-                        System.out.println("Recieved message content: " + dataReceived);
-                        String[] arr = dataReceived.split(","); 
-                        String executable = "node node-requests.js " + arr[0] + "," + arr[1]+ "," + arr[2]+ "," + arr[4] + "," + arr[5] + "," + arr[9] + "," +arr[10]+ "," +arr[11];
-                        java.lang.Runtime.getRuntime().exec(executable);
-                        // System.out.println(executable);
+                        // System.out.println("Recieved message content: " + dataReceived);
+                        String[] split = dataReceived.split(","); 
+                        String list = 
+                            split[0] + ", " +
+                            split[1] + ", " +
+                            split[2] + ", " +
+                            split[4] + ", " +
+                            split[5] + ", " +
+                            split[9] + ", " +
+                            split[10] + ", " +
+                            split[11];
+                        
+                        String[] commandArgs = new String[]{"node", "node-requests.js", list};
+                        java.lang.Runtime.getRuntime().exec(commandArgs);
                     }
                     if (writer != null) {
                         writer.write(dataReceived, 0, dataReceived.length());
