@@ -9,6 +9,7 @@ for (let i = 2; i < process.argv.length; i++) {
   arg.push(process.argv[i]);
 }
 
+
 // Manipulate array to fit into the proper format
 arg = arg.join('","').split(",")
 
