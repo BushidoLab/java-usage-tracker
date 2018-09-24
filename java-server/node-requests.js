@@ -1,26 +1,40 @@
 const axios = require("axios");
-// const shell = require("shelljs");
 
-// shell.exec('go run ../hardware-discovery/main.go')
-//   .then(response => {
-//     arg = [param[0]]
-//   })
+let companyName = "oracle"
+let arg = [];
 
-let arg = [1,2,3,4,5,6,7,8,9];
+// process.argv gives all parameters passed to the CLI
+// In this case process.argv[0] = node and process.argv[1] = node-requests.js
+for (let i = 2; i < process.argv.length; i++) {
+  arg.push(process.argv[i]);
+}
 
-let data = JSON.stringify({
+// Manipulate array to fit into the proper format
+arg = arg.join('","').split(",")
+
+// Add the companies name mannually to pass as first argument in the body
+arg.unshift(companyName);
+
+
+// Set the body of the POST request
+let data = {
   channel: "default",
-  chaincode: "usage-tracker-29",
+  chaincode: "usage-tracker-32",
   chaincodeVer: "1.0",
   method: "Log",
-  args: [arg[0], arg[1], arg[2], arg[3], arg[4], arg[5], arg[6], arg[7], arg[8]]  
-});
+  args: arg
+};
+
+// Stringify the data object to format for POST request
+data = JSON.stringify(data);
 
 function postRequest() {
     axios.post('https://8BECD2B5F48C47EEB7375AB654A8D7A5.blockchain.ocp.oraclecloud.com:443/restproxy1/bcsgw/rest/v1/transaction/invocation', data, {
       dataType: 'json',
       withCredentials: true,
       async: true,
+      // Body format has to be application/json type
+      // Authorization is Base64 encoded OABCS login credentials
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Basic ZGllZ29AYXBwby50ZWNoOjEyMzQ1Njc4OUFhLg=='
