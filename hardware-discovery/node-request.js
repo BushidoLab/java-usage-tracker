@@ -6,7 +6,6 @@ let arg = [];
 // process.argv gives all parameters passed to the CLI
 // In this case process.argv[0] = node and process.argv[1] = node-requests.js
 for (let i = 2; i < process.argv.length; i++) {
-  console.log("===", i, process.argv[i]);
   arg.push(process.argv[i]);
 }
 
