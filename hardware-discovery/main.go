@@ -2,31 +2,29 @@ package main
 
 import (
 		"fmt"
+		"os"
+		"os/exec"
 		"github.com/jaypipes/ghw"
 )
 
 func main() {
-	memory, err := ghw.Memory()
-	if err != nil {
-		fmt.Printf("Error getting memory info: %v", err)
-	}
-	fmt.Println(memory.String())
-
+	cmd := "node"
+	
 	cpu, err := ghw.CPU()
 	if err != nil {
 		fmt.Printf("Error getting CPU info: %v", err)
 	}
 
 	fmt.Printf("%v\n", cpu)
+	str := fmt.Sprint(cpu.TotalCores)
 
 	for _, proc := range cpu.Processors {
-		fmt.Printf(" %v\n", proc)
 		fmt.Printf("Vendor: %v\n", proc.Vendor)
 		fmt.Printf("Model: %v\n", proc.Model)
-		fmt.Printf("Processor Id: %v\n", proc.Id)
-		for _, core := range proc.Cores {
-			fmt.Printf("  %v\n", core)
+		if err := exec.Command(cmd, "node-request.js", str, proc.Vendor, proc.Model).Run(); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
 	}
+	
 }
-
