@@ -16,7 +16,7 @@ arg.unshift(companyName);
 // Set the body of the POST request
 let data = {
   channel: "default",
-  chaincode: "proc-chaincode-06",
+  chaincode: "proc-tracker-07",
   chaincodeVer: "1.0",
   method: "Log",
   args: arg

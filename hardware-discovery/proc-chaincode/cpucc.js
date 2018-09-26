@@ -25,12 +25,20 @@ const Chaincode = class {
     let obj = ({
       cpu: args[1],
       vendor: args[2],
-      model: args[3]
+      model: args[3],
+      dateTime: args[4]
     })
 
     obj = JSON.stringify(obj);
 
-    await stub.putState(company, Buffer.from(obj));
+    let logCount = await stub.getState(company);
+    logCount = parseInt(logCount);
+    logCount = logCount + 1;
+    logCount = logCount.toString();
+
+    await stub.putState(company, Buffer.from(logCount));
+
+    await stub.putState(logCount, Buffer.from(obj));
 
     return shim.success(Buffer.from("Log recorded"));
   }
@@ -38,7 +46,12 @@ const Chaincode = class {
   async query(stub, args) {
     let data = await stub.getState(args[0]);
 
-    return shim.success(Buffer.from("Processor info: " + data));
+    return shim.success(Buffer.from("Log count: #" + data));
+  }
+
+  async queryLog(stub, args) {
+    let log = await stub.getState(args[0]);
+    return shim.success(Buffer.from("Log #" + args[0] + ":" + log));
   }
 }
 
