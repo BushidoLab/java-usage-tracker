@@ -1,0 +1,27 @@
+{
+  "name": "usage-tracker",
+  "version": "1.0.0",
+  "description": "## What does it do? ### Named User Plus Licenses - Receives incoming UDP packets containing Java Usage information from computers configured with the usagetracker.properties file - Parses the data in the UDP packets - Sends relevant data to be stored in our hyperledger fabric network - Fabric network endorses the request and stores it to the companies channel ledger - Relevant information is sent to a front end webapp which provides necessary information for a reconciliation",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "axios": "^0.18.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BushidoLab/java-usage-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BushidoLab/java-usage-tracker/issues"
+  },
+  "homepage": "https://github.com/BushidoLab/java-usage-tracker#readme"
+}

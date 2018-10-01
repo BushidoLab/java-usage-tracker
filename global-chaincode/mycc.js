@@ -1,6 +1,5 @@
-
 // shim package used to help serialize/deserialize data stored in blockchain
-const shim = require('fabric-shim');
+const shim = require("fabric-shim");
 
 const Chaincode = class {
   // Initialize chaincode on the peer, requires an argument specyfing the user's company name
@@ -9,21 +8,20 @@ const Chaincode = class {
     // .getFunctionAndParameters() returns the function and parameters as ret.fcn and ret.params
     let ret = stub.getFunctionAndParameters();
     let company = ret.params[0];
-    let logs = '0';
+    let logs = "0";
 
     // Stores company name with a value of "0"
     await stub.putState(company, Buffer.from(logs));
- 
+
     if (ret.params.length == 1) {
-      return shim.success(Buffer.from('Initialized successfully'));
+      return shim.success(Buffer.from("Initialized successfully"));
     } else {
-      return shim.error(Buffer.from('Error while initializing'));
+      return shim.error(Buffer.from("Error while initializing"));
     }
   }
 
   // Method used to get invoke all other functions
   async Invoke(stub) {
-
     let ret = stub.getFunctionAndParameters();
 
     let fcn = this[ret.fcn];
@@ -33,7 +31,7 @@ const Chaincode = class {
   // Stores a log as a stringified JSON object and adds one to the companies log count
   async Log(stub, args) {
     if (args.length < 2) {
-      return shim.error(Buffer.from('Too few arguments'));
+      return shim.error(Buffer.from("Too few arguments"));
     }
 
     // Specify company name to be able to get its state (log count)
@@ -44,12 +42,12 @@ const Chaincode = class {
 
     // Create object, skipping first argument (company name) then passing all arguments as values
     // Each value's keys are the number of the argument they were passed in
-    for (let i = 1; i < args.length; i ++) {
+    for (let i = 1; i < args.length; i++) {
       obj[i] = args[i];
     }
 
     // Making object with log data into a JSON stringified object
-    obj = JSON.stringify(obj)
+    obj = JSON.stringify(obj);
 
     // Increases the companies log count by one
     let logCount = await stub.getState(company);
@@ -58,12 +56,12 @@ const Chaincode = class {
     logCount = logCount.toString();
 
     // Stores object with it's companies log count as its key
-    await stub.putState(logCount, Buffer.from(obj))
-        
+    await stub.putState(logCount, Buffer.from(obj));
+
     // Updates the companies total log count
-    await stub.putState(company, Buffer.from(logCount))
-  
-    return shim.success(Buffer.from('Log recorded successfully'));
+    await stub.putState(company, Buffer.from(logCount));
+
+    return shim.success(Buffer.from("Log recorded successfully"));
   }
 
   // Queries using the company name as a key and returns it's log count
@@ -71,13 +69,13 @@ const Chaincode = class {
     const company = args[0];
     let data = await stub.getState(company);
 
-    return shim.success(Buffer.from('Log count: ' + data));
+    return shim.success(Buffer.from("Log count: " + data));
   }
 
   // Queries a single log's data using it's key
   async queryLog(stub, args) {
     let log = await stub.getState(args[0]);
-    return shim.success(Buffer.from('Log #' + args[0] + ': ' + log));
+    return shim.success(Buffer.from("Log #" + args[0] + ": " + log));
   }
 
   // Queries all logs associated with a company name
@@ -88,17 +86,19 @@ const Chaincode = class {
     let logCount = await stub.getState(company);
     logCount = parseInt(logCount);
     logCount = logCount + 1;
-    
+
     // Defines array were all logs are pushed into
     let logArr = [];
-    
+
     for (let i = 1; i < logCount; i++) {
       i = i.toString();
       let data = await stub.getState(i);
       logArr.push(data);
     }
-    return shim.success(Buffer.from('All logs from ' + args[0] + ': ' + logArr));
+    return shim.success(
+      Buffer.from("All logs from " + args[0] + ": " + logArr)
+    );
   }
-}
+};
 
-shim.start(new Chaincode);
+shim.start(new Chaincode());

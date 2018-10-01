@@ -1,9 +1,15 @@
-# Ignores node_modules directory
+# Ignores node_modules directories
 /node_modules
-/node/node_modules
+*/node_modules
 
 # Ignores the tests folder containing some chaincode tests
 ./tests
 
-# Ignores .vscode folder which ignores git
+# Ignores .vscode folder
 ./.vscode
+
+# Ignores all ZIP files
+*.zip
+
+# Ignore .env file
+.env

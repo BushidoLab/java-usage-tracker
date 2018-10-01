@@ -1,18 +1,24 @@
-require("dotenv").config({path: "../.env"});
+require("dotenv").config({
+  path: "../.env"
+});
 const axios = require("axios");
 
-axios.get('https://8BECD2B5F48C47EEB7375AB654A8D7A5.blockchain.ocp.oraclecloud.com:443/restproxy1/bcsgw/rest/version', {
-      dataType: 'json',
+axios
+  .get(
+    "https://8BECD2B5F48C47EEB7375AB654A8D7A5.blockchain.ocp.oraclecloud.com:443/restproxy1/bcsgw/rest/version",
+    {
+      dataType: "json",
       withCredentials: true,
       async: true,
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': process.env.CREDENTIALS
+        "Content-Type": "application/json",
+        Authorization: process.env.CREDENTIALS
       }
-})
-.then(response => {
-  console.log(response.data);
-})
-.catch(error => {
-  console.log(error);
-})
+    }
+  )
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.log(error);
+  });
