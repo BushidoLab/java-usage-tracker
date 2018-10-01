@@ -2,13 +2,13 @@
 
 ## What does it do?
 - Uses the [GHW hardware inspection library](https://github.com/jaypipes/ghw)
-- Returns value of the current machines memory and cpu information
+- Returns value of the current machines cpu information
 
 ## Introduction:
 This tool is used to track processor information necessary for calculating the amount of Java SE processor licenses required using oracle core factor pricing table
 
 ## How to use:
-- First install go [Golang install portal](https://golang.org/doc/install)
+- First install latest stable version of go [Golang install portal](https://golang.org/doc/install)
 - Afterwards create a go folder to contain the necesarry packages
 - Then set your GOPATH pointing to the newly created go directory:
 ```$ export GOPATH=$HOME/go```

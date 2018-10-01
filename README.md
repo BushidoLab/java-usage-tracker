@@ -1,11 +1,18 @@
 # Java Usage Tracker
 
 ## What does it do?
+### Named User Plus Licenses
 - Receives incoming UDP packets containing Java Usage information from computers configured with the usagetracker.properties file
 - Parses the data in the UDP packets
 - Sends relevant data to be stored in our hyperledger fabric network
 - Fabric network endorses the request and stores it to the companies channel ledger
-- Relevant log information is sent to a front end webapp which provides necessary information for a reconciliation.
+- Relevant information is sent to a front end webapp which provides necessary information for a reconciliation
+
+### Processor based licenses
+- Runs a script which performs hardware discovery on the local machine and returns values of CPU cores, CPU vendor and CPU model
+- Logs that information directly to fabric network
+- Fabric network endorses the request and stores it to the companies channel ledger
+- Relevant information is sent to a front end webapp which provides necessary information for a reconciliation
 
 ## Introduction:
 This tool was created to help with tracking, recollecting then providing necesarry data for a Software Asset Management's (SAM) audit.
