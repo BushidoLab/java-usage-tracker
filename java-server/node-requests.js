@@ -1,6 +1,7 @@
+require('dotenv').config({path: '../.env'});
 const axios = require("axios");
-// const mac = require("getmac");
 
+// const mac = require("getmac");
 // mac.getMac((err, macAddress) => {
 //   if (err) throw err;
 //   console.log('Your MAC address is: ' + macAddress);
@@ -14,7 +15,6 @@ let arg = [];
 for (let i = 2; i < process.argv.length; i++) {
   arg.push(process.argv[i]);
 }
-
 
 // Manipulate array to fit into the proper format
 arg = arg.join('","').split(",")
@@ -44,7 +44,7 @@ function postRequest() {
       // Authorization is Base64 encoded OABCS login credentials
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ZGllZ29AYXBwby50ZWNoOjEyMzQ1Njc4OUFhLg=='
+        'Authorization': process.env.CREDENTIALS
       },
       proxy: {
         host: '8BECD2B5F48C47EEB7375AB654A8D7A5.blockchain.ocp.oraclecloud.com',
@@ -54,7 +54,7 @@ function postRequest() {
       data: data
     })
     .then(response => {
-      console.log(response);
+      console.log(response.data);
     })
     .catch(error => {
       console.log(error);

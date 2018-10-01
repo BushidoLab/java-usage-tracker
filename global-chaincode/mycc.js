@@ -3,10 +3,8 @@
 const shim = require('fabric-shim');
 
 const Chaincode = class {
-
   // Initialize chaincode on the peer, requires an argument specyfing the user's company name
   // Then the company gets stored as a key-value pair with a value of "0" represinting the amount of logs recorded
-  
   async Init(stub) {
     // .getFunctionAndParameters() returns the function and parameters as ret.fcn and ret.params
     let ret = stub.getFunctionAndParameters();

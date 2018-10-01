@@ -30,6 +30,8 @@ const Chaincode = class {
 
   // Stores a log as a stringified JSON object and adds one to the companies log count
   async Log(stub, args) {
+    // Specify company name to be able to get its state (log count)
+    const company = args[0];
 
     // Object containing java usage tracker logs
     let obj = ({
@@ -43,17 +45,14 @@ const Chaincode = class {
       OSVersion: args[8]
     });
 
-    // Specify company name to be able to get its state (log count)
-    const company = args[0];
+    // Making object with log data into a JSON stringified object
+    obj = JSON.stringify(obj)
 
     // Increases the companies log count by one
     let logCount = await stub.getState(company);
     logCount = parseInt(logCount);
     logCount = logCount + 1;
     logCount = logCount.toString();
-    
-    // Making object with log data into a JSON stringified object
-    obj = JSON.stringify(obj)
 
     // Stores object with it's companies log count as its key
     await stub.putState(logCount, Buffer.from(obj))
@@ -61,7 +60,7 @@ const Chaincode = class {
     // Updates the companies total log count
     await stub.putState(company, Buffer.from(logCount))
   
-    return shim.success(Buffer.from('Log recorded successfully', "", obj));
+    return shim.success(Buffer.from('Log recorded successfully'));
   }
 
   // Queries using the company name as a key and returns it's log count
