@@ -1,4 +1,10 @@
 const axios = require("axios");
+// const mac = require("getmac");
+
+// mac.getMac((err, macAddress) => {
+//   if (err) throw err;
+//   console.log('Your MAC address is: ' + macAddress);
+// });
 
 let companyName = "oracle"
 let arg = [];
