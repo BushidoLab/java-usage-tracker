@@ -23,6 +23,8 @@
   "homepage": "https://github.com/BushidoLab/java-usage-tracker#readme",
   "dependencies": {
     "axios": "^0.18.0",
+    "getmac": "^1.4.6",
+    "node-cmd": "^3.0.0",
     "prettier": "^1.14.3"
   }
 }

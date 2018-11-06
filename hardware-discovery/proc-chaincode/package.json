@@ -1,13 +1,13 @@
 {
-  "name": "cpucc",
+  "name": "mycc",
   "version": "1.0.0",
-  "description": "cpucc chaincode implemented in node.js",
+  "description": "mycc chaincode implemented in node.js",
   "engines": {
       "node": ">=8.4.0",
       "npm": ">=5.3.0"
   },
   "scripts": {
-      "start": "node cpucc.js"
+      "start": "node mycc.js"
   },
   "engine-strict": true,
   "license": "Apache-2.0",
