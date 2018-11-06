@@ -22,7 +22,7 @@ function setArguments() {
   // Sets the body of the POST request
   let data = {
     channel: "default",
-    chaincode: "ProcessorChaincode2",
+    chaincode: "processor-cc",
     chaincodeVer: "1.0",
     method: "Log",
     args: arg
@@ -40,8 +40,9 @@ function setArguments() {
   })
   
   arg.push('Processor');
-  arg.push(1);
+  arg.push("1");
   arg.push(address);
+  arg.push(os.type());
   
   // Function get virtualization information using lscpu cmd which works on unix style systems
   cmd.get('lscpu', function(err, output) {

@@ -31,8 +31,9 @@ const Chaincode = class {
       category: args[6],
       userCount: args[7],
       IP: args[8],
-      MAC: args[9],
-      virtualization: args[10]
+      OS: args[9],
+      MAC: args[10],
+      virtualization: args[11]
     })
 
     obj = JSON.stringify(obj);
